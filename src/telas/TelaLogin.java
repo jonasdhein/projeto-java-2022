@@ -98,7 +98,7 @@ public class TelaLogin extends javax.swing.JFrame {
         if(existe){
             TelaMenuPrincipal tela = new TelaMenuPrincipal();
             tela.setVisible(true); //mostrar a TelaMenuPrincipal
-            dispose(); //fechar a tela atual
+            dispose(); //fechar a tela de login atual
         }else{
             CaixaDeDialogo.obterinstancia().exibirMensagem("Usuário inválido!");
         }
