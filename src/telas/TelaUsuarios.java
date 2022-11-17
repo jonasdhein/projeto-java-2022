@@ -20,6 +20,10 @@ public class TelaUsuarios extends javax.swing.JFrame {
      */
     public TelaUsuarios() {
         initComponents();
+        
+        UsuarioController controller = new UsuarioController();
+        controller.preencherLista(jtbUsuarios);
+        
     }
 
     /**
@@ -48,6 +52,7 @@ public class TelaUsuarios extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jtbUsuarios = new javax.swing.JTable();
         btnLimpar = new javax.swing.JButton();
+        txtId = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -111,6 +116,8 @@ public class TelaUsuarios extends javax.swing.JFrame {
             }
         });
 
+        txtId.setText("ID");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -122,6 +129,7 @@ public class TelaUsuarios extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtId)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnIncluir)
                                 .addGap(5, 5, 5)
@@ -155,7 +163,9 @@ public class TelaUsuarios extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addGap(27, 27, 27)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtId)
+                        .addGap(1, 1, 1)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
@@ -238,19 +248,20 @@ public class TelaUsuarios extends javax.swing.JFrame {
         try{
 
             int linhaSelecionada = jtbUsuarios.getSelectedRow();//pega a linha selecionada
-            String coluna1 = jtbUsuarios.getModel()
+            String idUsuario = jtbUsuarios.getModel()
             .getValueAt(linhaSelecionada, 0).toString(); // Primeira coluna da linha
 
-            /*if(jtbUsuarios.isColumnSelected(2)){
-                objUsuarioController = new UsuarioController();
+            //if(jtbUsuarios.isColumnSelected(2)){
+                UsuarioController objUsuarioController = new UsuarioController();
 
-                objUsuario = objUsuarioController.buscar(coluna1);
+                Usuario objUsuario = objUsuarioController.buscar(Integer.parseInt(idUsuario));
                 if (objUsuario != null && objUsuario.getId() > 0){
-                    telaAlteracao(objUsuario);
+                    txtId.setText(String.valueOf(objUsuario.getId()));
+                    txtNome.setText(objUsuario.getNome());
                 }else{
                     CaixaDeDialogo.obterinstancia().exibirMensagem("Erro ao buscar Usuário no BD!");
                 }
-            }*/
+            //}
 
         }catch(Exception ex){
             CaixaDeDialogo.obterinstancia().exibirMensagem(ex.getMessage(), 'e');
@@ -335,6 +346,7 @@ public class TelaUsuarios extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jtbUsuarios;
     private javax.swing.JTextField txtConfirmacaoSenha;
+    private javax.swing.JLabel txtId;
     private javax.swing.JTextField txtLogin;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtSenha;

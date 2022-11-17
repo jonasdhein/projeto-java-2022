@@ -55,6 +55,54 @@ public class UsuarioController {
 		
     }
     
+    public Usuario buscar(int id)
+    {
+        try {
+            Usuario objUsuario = null;
+            
+            Conexao.abreConexao();
+            ResultSet rs = null;
+            PreparedStatement stmt;
+
+            String wSql = "";
+            wSql = " SELECT * ";
+            wSql += " FROM usuarios ";
+            wSql += " WHERE id = ? ";
+
+            try{
+                System.out.println("Vai Executar Conexão em buscar Usuario");
+                stmt = Conexao.con.prepareStatement(wSql);
+                stmt.setInt(1, id);
+
+                rs = stmt.executeQuery();
+                
+                if(rs.next()){
+                    objUsuario = new Usuario();
+                    objUsuario.setId(rs.getInt("id"));
+                    objUsuario.setNome(rs.getString("nome"));
+                    objUsuario.setTelefone(rs.getString("telefone"));
+                    objUsuario.setUsuario(rs.getString("usuario"));
+                    objUsuario.setSenha(rs.getString("senha"));
+                    
+                    objUsuario.setId(rs.getInt("id"));
+                    return objUsuario;
+                }
+                
+            }catch (SQLException ex )
+            {
+                System.out.println("ERRO de SQL: " + ex.getMessage().toString());
+                return null;
+            }
+
+        } catch (Exception e) {
+            System.out.println("ERRO: " + e.getMessage().toString());
+            return null;
+        }
+        
+        return null;
+		
+    }
+    
     public boolean incluir(Usuario objUsuario){
         
         try {
@@ -85,20 +133,21 @@ public class UsuarioController {
 
         Vector<String> cabecalhos = new Vector<String>();
         Vector dadosTabela = new Vector();
-        cabecalhos.add("Código");
+        cabecalhos.add("Id");
         cabecalhos.add("Nome");
         cabecalhos.add(" ");
         
+        Conexao.abreConexao();
         ResultSet result = null;
         
         try {
 
-            String SQL = "";
-            SQL = "SELECT id, nome ";
-            SQL += " FROM usuarios ";
-            SQL += " ORDER BY nome ";
+            String sql = "";
+            sql = "SELECT id, nome ";
+            sql += " FROM usuarios ";
+            sql += " ORDER BY nome ";
             
-            result = Conexao.stmt.executeQuery(SQL);
+            result = Conexao.stmt.executeQuery(sql);
 
             while (result.next()) {
                 Vector<Object> linha = new Vector<Object>();
@@ -108,7 +157,7 @@ public class UsuarioController {
                 dadosTabela.add(linha);
             }
             
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("problemas para popular tabela...");
             System.out.println(e);
         }
@@ -119,7 +168,7 @@ public class UsuarioController {
             public boolean isCellEditable(int row, int column) {
               return false;
             }
-            // permite seleção de apenas uma linha da tabela
+            
         });
 
 
