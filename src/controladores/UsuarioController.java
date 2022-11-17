@@ -81,7 +81,7 @@ public class UsuarioController {
         
     }
     
-    public void PreenchePalestrantes(JTable jtbPalestrantes) {
+    public void preencherLista(JTable jtbUsuarios) {
 
         Vector<String> cabecalhos = new Vector<String>();
         Vector dadosTabela = new Vector();
@@ -113,7 +113,7 @@ public class UsuarioController {
             System.out.println(e);
         }
 
-        jtbPalestrantes.setModel(new DefaultTableModel(dadosTabela, cabecalhos) {
+        jtbUsuarios.setModel(new DefaultTableModel(dadosTabela, cabecalhos) {
 
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -124,12 +124,12 @@ public class UsuarioController {
 
 
         // permite seleção de apenas uma linha da tabela
-        jtbPalestrantes.setSelectionMode(0);
+        jtbUsuarios.setSelectionMode(0);
 
         // redimensiona as colunas de uma tabela
         TableColumn column = null;
         for (int i = 0; i < 3; i++) {
-            column = jtbPalestrantes.getColumnModel().getColumn(i);
+            column = jtbUsuarios.getColumnModel().getColumn(i);
             switch (i) {
                 case 0:
                     column.setPreferredWidth(80);
@@ -139,7 +139,7 @@ public class UsuarioController {
                     break;
             }
         }
-        jtbPalestrantes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        jtbUsuarios.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
