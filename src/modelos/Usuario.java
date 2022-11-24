@@ -10,8 +10,7 @@ public class Usuario {
     private String usuario;
     private String senha;
     private String telefone;
-    
-    //ALT + INSERT AQUI!!!! (GETTER AND SETTER)
+
     public int getId() {
         return id;
     }
@@ -51,6 +50,8 @@ public class Usuario {
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
+    
+    
     
     
 }
