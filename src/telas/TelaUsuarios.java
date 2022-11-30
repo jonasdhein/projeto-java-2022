@@ -23,13 +23,68 @@ public class TelaUsuarios extends javax.swing.JFrame {
     public TelaUsuarios() {
         initComponents();
         
-        atualizarLista();
+        limparCampos();
         
     }
     
     private void atualizarLista(){
         objUsuarioController = new UsuarioController();
         objUsuarioController.preencherLista(jtbUsuarios);
+    }
+    
+    private void preencherCampos(){
+        try{
+            
+            txtId.setText(String.valueOf(objUsuario.getId()));
+            txtNome.setText(objUsuario.getNome());
+            txtLogin.setText(objUsuario.getUsuario());
+            txtTelefone.setText(objUsuario.getTelefone());
+            
+            btnIncluir.setEnabled(false);            
+            btnAlterar.setEnabled(true);
+            btnExcluir.setEnabled(true);
+            txtLogin.setEnabled(false);
+            txtLogin.setEditable(false);
+
+            
+        }catch(Exception ex){
+            CaixaDeDialogo.obterinstancia().exibirMensagem(ex.getMessage());
+        }
+    }
+    
+    private void limparCampos(){
+        try{
+            
+            txtId.setText("ID");
+            txtNome.setText("");
+            txtLogin.setText("");
+            txtTelefone.setText("");
+            
+            btnIncluir.setEnabled(true);            
+            btnAlterar.setEnabled(false);
+            btnExcluir.setEnabled(false);
+            txtLogin.setEnabled(true);
+            txtLogin.setEditable(true);
+            
+            atualizarLista();
+            
+        }catch(Exception ex){
+            CaixaDeDialogo.obterinstancia().exibirMensagem(ex.getMessage());
+        }
+    }
+    
+    private void guardarDados(){
+        try{
+            
+            objUsuario = new Usuario();
+            objUsuario.setNome(txtNome.getText());
+            objUsuario.setTelefone(txtTelefone.getText());
+            objUsuario.setUsuario(txtLogin.getText());
+            objUsuario.setSenha(txtSenha.getText());
+            
+        }catch(Exception ex){
+            CaixaDeDialogo.obterinstancia().exibirMensagem(ex.getMessage());
+        }
     }
 
     /**
@@ -202,7 +257,7 @@ public class TelaUsuarios extends javax.swing.JFrame {
                         .addComponent(btnLimpar)))
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -212,15 +267,11 @@ public class TelaUsuarios extends javax.swing.JFrame {
         // INCLUI UM USUARIO NA BASE DE DADOS
         if(validarDados()){
             
-            objUsuario = new Usuario();
-            objUsuario.setNome(txtNome.getText());
-            objUsuario.setTelefone(txtTelefone.getText());
-            objUsuario.setUsuario(txtLogin.getText());
-            objUsuario.setSenha(txtSenha.getText());
+            guardarDados();
             
             //verificar se o usuário já existe
             objUsuarioController = new UsuarioController();
-            if (objUsuarioController.verificaExistencia(objUsuario.getUsuario())) {
+            if (objUsuarioController.verificaExistencia(objUsuario)) {
                 CaixaDeDialogo.obterinstancia().exibirMensagem("Usuário já existe!", 'e');
             }else{
                 if(objUsuarioController.incluir(objUsuario) == true){
@@ -230,7 +281,7 @@ public class TelaUsuarios extends javax.swing.JFrame {
                 }
             }
             
-            atualizarLista();
+            limparCampos();
 
         }
     }//GEN-LAST:event_btnIncluirActionPerformed
@@ -239,6 +290,23 @@ public class TelaUsuarios extends javax.swing.JFrame {
         // TODO add your handling code here:
         try{
             if(validarDados()){
+            
+                guardarDados();
+                objUsuario.setId(Integer.parseInt(txtId.getText()));
+
+                //verificar se o usuário já existe
+                objUsuarioController = new UsuarioController();
+                if (objUsuarioController.verificaExistencia(objUsuario)) {
+                    CaixaDeDialogo.obterinstancia().exibirMensagem("Usuário já existe!", 'e');
+                }else{
+                    if(objUsuarioController.alterar(objUsuario) == true){
+                        CaixaDeDialogo.obterinstancia().exibirMensagem("Usuário alterado com Sucesso ("+ objUsuario.getId() +")!");
+                    }else{
+                        CaixaDeDialogo.obterinstancia().exibirMensagem("Erro ao alterar usuário!", 'e');
+                    }
+                }
+
+                limparCampos();
 
             }
 
@@ -272,12 +340,9 @@ public class TelaUsuarios extends javax.swing.JFrame {
             //if(jtbUsuarios.isColumnSelected(2)){
                 UsuarioController objUsuarioController = new UsuarioController();
 
-                Usuario objUsuario = objUsuarioController.buscar(Integer.parseInt(idUsuario));
+                objUsuario = objUsuarioController.buscar(Integer.parseInt(idUsuario));
                 if (objUsuario != null && objUsuario.getId() > 0){
-                    txtId.setText(String.valueOf(objUsuario.getId()));
-                    txtNome.setText(objUsuario.getNome());
-                    txtLogin.setText(objUsuario.getUsuario());
-                    txtTelefone.setText(objUsuario.getTelefone());
+                    preencherCampos();
                 }else{
                     CaixaDeDialogo.obterinstancia().exibirMensagem("Erro ao buscar Usuário no BD!");
                 }
@@ -289,7 +354,8 @@ public class TelaUsuarios extends javax.swing.JFrame {
     }//GEN-LAST:event_jtbUsuariosMousePressed
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        // TODO add your handling code here:
+        
+        limparCampos();
        
     }//GEN-LAST:event_btnLimparActionPerformed
 

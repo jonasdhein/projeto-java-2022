@@ -98,7 +98,7 @@ public class UsuarioController {
 
     }
 
-    public boolean verificaExistencia(String login) {
+    public boolean verificaExistencia(Usuario objUsuario) {
         try {
             Conexao.abreConexao();
             ResultSet rs = null;
@@ -107,10 +107,16 @@ public class UsuarioController {
             String wSql = " SELECT * ";
             wSql += " FROM usuarios ";
             wSql += " WHERE usuario = ? ";
+            if(objUsuario.getId() > 0){
+                wSql += " AND id <> ? ";
+            }
 
             System.out.println("Vai Executar Conexão em verificaExistencia Usuario");
             stmt = Conexao.con.prepareStatement(wSql);
-            stmt.setString(1, login);   
+            stmt.setString(1, objUsuario.getUsuario());   
+            if(objUsuario.getId() > 0){
+                stmt.setInt(2, objUsuario.getId());   
+            }
 
             rs = stmt.executeQuery();
 
@@ -161,7 +167,9 @@ public class UsuarioController {
         Vector<String> cabecalhos = new Vector<String>();
         Vector dadosTabela = new Vector();
         cabecalhos.add("Id");
-        cabecalhos.add("Nome");
+        cabecalhos.add("Nome");        
+        cabecalhos.add("Usuário");
+
 
         Conexao.abreConexao();
         ResultSet result = null;
@@ -169,7 +177,7 @@ public class UsuarioController {
         try {
 
             String sql = "";
-            sql = "SELECT id, nome ";
+            sql = "SELECT id, nome, usuario ";
             sql += " FROM usuarios ";
             sql += " ORDER BY nome ";
 
@@ -177,8 +185,10 @@ public class UsuarioController {
 
             while (result.next()) {
                 Vector<Object> linha = new Vector<Object>();
-                linha.add(result.getInt(1));
-                linha.add(result.getString(2));
+                linha.add(result.getInt("id"));
+                linha.add(result.getString("nome"));                
+                linha.add(result.getString("usuario"));
+
                 dadosTabela.add(linha);
             }
 
@@ -201,14 +211,17 @@ public class UsuarioController {
 
         // redimensiona as colunas de uma tabela
         TableColumn column = null;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             column = jtbUsuarios.getColumnModel().getColumn(i);
             switch (i) {
                 case 0:
                     column.setPreferredWidth(80);
                     break;
                 case 1:
-                    column.setPreferredWidth(250);
+                    column.setPreferredWidth(180);
+                    break;
+                case 2:
+                    column.setPreferredWidth(150);
                     break;
             }
         }
@@ -230,22 +243,18 @@ public class UsuarioController {
         //return (true);
     }
 
-    /*public boolean alterar(){
+    public boolean alterar(Usuario objUsuario){
         
-        ConnectionFactory.abreConexao();
-        Connection con = ConnectionFactory.getConnection();
+        Conexao.abreConexao();
         PreparedStatement stmt = null;
         
         try {
-            stmt = con.prepareStatement("UPDATE evento SET nome=?, inicio=?, termino=?, id_palestrante=?, id_area=?, id_cidade=?, valor=? WHERE id=?");
-            stmt.setString(1, objEvento.getNome());
-            stmt.setString(2, objEvento.getInicio());
-            stmt.setString(3, objEvento.getTermino());
-            stmt.setInt(4, objEvento.getId_palestrante());
-            stmt.setInt(5, objEvento.getId_area());
-            stmt.setInt(6, objEvento.getId_cidade());
-            stmt.setDouble(7, objEvento.getValor());
-            stmt.setInt(8, objEvento.getId());
+            stmt = Conexao.con.prepareStatement("UPDATE usuarios SET nome=?, usuario=?, senha=md5(?), telefone=? WHERE id=? ");
+            stmt.setString(1, objUsuario.getNome());
+            stmt.setString(2, objUsuario.getUsuario());
+            stmt.setString(3, objUsuario.getSenha());
+            stmt.setString(4, objUsuario.getTelefone());
+            stmt.setInt(5, objUsuario.getId());
             
             stmt.executeUpdate();
             
@@ -255,12 +264,12 @@ public class UsuarioController {
             System.out.println(ex.getMessage());
             return false;
         }finally{
-            ConnectionFactory.closeConnection(con, stmt);
+            Conexao.closeConnection(Conexao.con);
         }
         
     }
     
-    public boolean excluir(){
+    /*public boolean excluir(){
         
         ConnectionFactory.abreConexao();
         Connection con = ConnectionFactory.getConnection();

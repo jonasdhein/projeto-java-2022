@@ -5,8 +5,7 @@
         <group>
             <file>file:/C:/Users/jdhein/Documents/NetBeansProjects/Projeto/src/telas/TelaUsuarios.java</file>
             <file>file:/C:/Users/jdhein/Documents/NetBeansProjects/Projeto/src/controladores/UsuarioController.java</file>
-            <file>file:/C:/Users/jdhein/Documents/NetBeansProjects/Projeto/src/ferramentas/Conexao.java</file>
-            <file>file:/C:/Users/jdhein/Documents/NetBeansProjects/Projeto/src/telas/TelaLogin.java</file>
+            <file>file:/C:/Users/jdhein/Documents/NetBeansProjects/Projeto/src/modelos/Usuario.java</file>
         </group>
     </open-files>
 </project-private>
